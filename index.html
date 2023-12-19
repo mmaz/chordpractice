@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Random Piano Chord Inversions</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      background-color: #000;
+    }
+  </style>
+</head>
+<body>
+<div id="chord" style="
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  color: #fff;
+  font-size: 24px;
+  font-weight: bold;
+  background-image: linear-gradient(to right, #c785fa, #4e45ee);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+">
+</div>
+
+  <button onclick="generateChord()" style="padding: 10px 20px; font-size: 16px; background-color: #333; color: #fff; border: none; border-radius: 5px; cursor: pointer;">Next Chord</button>
+
+  <script>
+    const majorKeys = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+const inversions = ["Root Position", "First Inversion", "Second Inversion"];
+
+function generateChord() {
+  // Randomly pick a major key and inversion
+  const key = majorKeys[Math.floor(Math.random() * majorKeys.length)];
+  const inversionIndex = Math.floor(Math.random() * inversions.length);
+
+  // Create the notes based on the selected key and inversion
+  let notes = getChordNotes(key);
+  for (let i = 0; i < inversionIndex; i++) {
+    notes.unshift(notes.pop());
+  }
+
+  // Update the UI with the chord and notes
+  document.getElementById("chord").innerHTML = `${key} ${inversions[inversionIndex]}`;
+  document.getElementById("chord").innerHTML += `<br>Notes: ${notes.join(", ")}`;
+}
+
+function getChordNotes(key) {
+  switch (key) {
+    case "C": return ["C", "E", "G"];
+    case "C#": return ["C#", "F", "G#"];
+    case "D": return ["D", "F#", "A"];
+    case "D#": return ["D#", "G", "A#"];
+    case "E": return ["E", "G#", "B"];
+    case "F": return ["F", "A", "C"];
+    case "F#": return ["F#", "A#", "C#"];
+    case "G": return ["G", "B", "D"];
+    case "G#": return ["G#", "C", "D#"];
+    case "A": return ["A", "C#", "E"];
+    case "A#": return ["A#", "D", "F"]; // Corrected A# major
+    case "B": return ["B", "D#", "F#"];
+  }
+}
+
+
+// Generate the first chord on page load
+generateChord();
+
+
+  </script>
+</body>
+</html>

@@ -49,7 +49,39 @@
     </span>
 
     <script>
-        function drawPiano() {
+
+        function getScaleNotes(key) {
+          switch (key) {
+            case "C": return "C, D, E, F, G, A, B, C";
+            case "C#": return "Db, Eb, F, Gb, Ab, Bb, C, Db";
+            case "D": return "D, E, F#, G, A, B, C#, D";
+            case "D#": return "Eb, F, G, Ab, Bb, C, D, Eb";
+            case "E": return "E, F#, G#, A, B, C#, D#, E";
+            case "F": return "F, G, A, Bb, C, D, E, F";
+            case "F#": return "F#, G#, A#, B, C#, D#, F, F#";
+            case "G": return "G, A, B, C, D, E, F#, G";
+            case "G#": return "Ab, Bb, C, Db, Eb, F, G, Ab";
+            case "A": return "A, B, C#, D, E, F#, G#, A";
+            case "A#": return "Bb, C, D, Eb, F, G, A, Bb"; 
+            case "B": return "B, C#, D#, E, F#, G#, A#, B";
+          }
+        }
+        function generateScale() {
+            const majorKeys = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G',
+                               'G#', 'A', 'A#', 'B'];
+            const key = majorKeys[Math.floor(Math.random() * majorKeys.length)];
+            // todo:
+            // const scaleTypes = ['Major', 'Natural Minor', 'Harmonic Minor',
+            //                     'Melodic Minor', 'Major Pentatonic',
+            //                     'Minor Pentatonic', 'Blues'];
+            // const scaleType = scaleTypes[Math.floor(Math.random() * scaleTypes.length)];
+            // const scale = getScale(key, scaleType);
+            const notes = getScaleNotes(key);
+            const scaleInfo = `${key} Major: ${notes}`;
+            document.getElementById('scale').innerHTML = scaleInfo;
+            drawPiano(notes.split(', '));
+        }
+        function drawPiano(scaleNotes) {
             const canvas = document.getElementById('pianoCanvas');
             const ctx = canvas.getContext('2d');
 
@@ -58,18 +90,38 @@
             const whiteKeys = ['C', 'D', 'E', 'F', 'G', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'A', 'B'];
             const blackKeys = ['C#', 'D#', 'skip', 'F#', 'G#', 'A#', 'skip', 'C#', 'D#', 'skip', 'F#', 'G#', 'A#'];
 
-            ctx.fillStyle = 'white';
+            const enharmonics = {
+                'Db': 'C#',
+                'Eb': 'D#',
+                'Gb': 'F#',
+                'Ab': 'G#',
+                'Bb': 'A#',
+            };
+
+            const noteInScale = "#c785fa";
             ctx.strokeStyle = 'black';
 
             for (let i = 0; i < whiteKeys.length; i++) {
+                // if current note is in scaleNotes, color red, else white
+                if (scaleNotes.includes(whiteKeys[i])) {
+                    ctx.fillStyle = noteInScale;
+                } else {
+                    ctx.fillStyle = 'white';
+                }
                 const x = i * keyWidth;
                 ctx.fillRect(x, 0, keyWidth, keyHeight);
                 ctx.strokeRect(x, 0, keyWidth, keyHeight);
             }
 
-            ctx.fillStyle = 'black';
-            ctx.strokeStyle = 'white';
+            ctx.strokeStyle = 'black';
+            scaleNotes = scaleNotes.map(note => enharmonics[note] || note);
             for (let i = 0; i < blackKeys.length; i++) {
+                // if current note is in scaleNotes, color red, else black, using enharmonics
+                if (scaleNotes.includes(blackKeys[i])) {
+                    ctx.fillStyle = noteInScale;
+                } else {
+                    ctx.fillStyle = 'black';
+                }
                 if (blackKeys[i] === 'skip') {
                     continue;
                 }
@@ -79,7 +131,7 @@
             }
         }
 
-        drawPiano();
+        generateScale();
     </script>
 </body>
 </html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Piano Scale Memorization</title>
+    <style>
+      canvas {
+        border: 1px solid black;
+        background-color: black;
+      }
+  
+      body {
+        font-family: sans-serif;
+        text-align: center;
+        background-color: #000;
+      }
+
+      .scaleinfo {
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        color: #fff;
+        font-size: 14px;
+        font-weight: bold;
+        background-image: linear-gradient(to right, #c785fa, #4e45ee);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+
+      .nicebutton {
+        padding: 10px 20px; 
+        font-size: 16px; 
+        background-color: #333; 
+        color: #fff; 
+        border: none; 
+        border-radius: 5px; 
+        cursor: pointer;
+      }
+    </style>
+</head>
+<body>
+    <canvas id="pianoCanvas" width="420" height="100"></canvas>
+    <div style="height: 5px;"></div>
+    <div id="scale" class="scaleinfo"></div>
+    <div style="height: 5px;"></div>
+    <span>
+        <button onclick="generateScale()" class="nicebutton">Next Scale</button>
+        <button onclick="location.href='index.html'" class="nicebutton" type="button">Chords</button>
+    </span>
+
+    <script>
+        function drawPiano() {
+            const canvas = document.getElementById('pianoCanvas');
+            const ctx = canvas.getContext('2d');
+
+            const keyWidth = 30; // 14 white keys * 30px = 420px canvas width
+            const keyHeight = 100;
+            const whiteKeys = ['C', 'D', 'E', 'F', 'G', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'A', 'B'];
+            const blackKeys = ['C#', 'D#', 'skip', 'F#', 'G#', 'A#', 'skip', 'C#', 'D#', 'skip', 'F#', 'G#', 'A#'];
+
+            ctx.fillStyle = 'white';
+            ctx.strokeStyle = 'black';
+
+            for (let i = 0; i < whiteKeys.length; i++) {
+                const x = i * keyWidth;
+                ctx.fillRect(x, 0, keyWidth, keyHeight);
+                ctx.strokeRect(x, 0, keyWidth, keyHeight);
+            }
+
+            ctx.fillStyle = 'black';
+            ctx.strokeStyle = 'white';
+            for (let i = 0; i < blackKeys.length; i++) {
+                if (blackKeys[i] === 'skip') {
+                    continue;
+                }
+                const x = (i + 0.75) * keyWidth;
+                ctx.fillRect(x, 0, keyWidth / 2, keyHeight / 1.5);
+                ctx.strokeRect(x, 0, keyWidth / 2, keyHeight / 1.5);
+            }
+        }
+
+        drawPiano();
+    </script>
+</body>
+</html>

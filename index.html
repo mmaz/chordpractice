@@ -3,33 +3,54 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Random Piano Chord Inversions</title>
+  <title>Piano Chord Memorization</title>
   <style>
     body {
       font-family: sans-serif;
       text-align: center;
       background-color: #000;
     }
+
+    .chordinfo {
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      color: #fff;
+      font-size: 24px;
+      font-weight: bold;
+      background-image: linear-gradient(to right, #c785fa, #4e45ee);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .nicebutton {
+      padding: 10px 20px; 
+      font-size: 16px; 
+      background-color: #333; 
+      color: #fff; 
+      border: none; 
+      border-radius: 5px; 
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
-<div id="chord" style="
-  padding: 20px;
-  border-radius: 10px;
-  text-align: center;
-  color: #fff;
-  font-size: 24px;
-  font-weight: bold;
-  background-image: linear-gradient(to right, #c785fa, #4e45ee);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-">
-</div>
-
-  <button onclick="generateChord()" style="padding: 10px 20px; font-size: 16px; background-color: #333; color: #fff; border: none; border-radius: 5px; cursor: pointer;">Next Chord</button>
+  <div id="topel">
+    <div id="chord" class="chordinfo"></div>
+  </div>
+  <div style="height: 5px;"></div>
+  <button onclick="generateChord()" class="nicebutton">Next Chord</button>
+  <div style="height: 5px;"></div>
+  <button onclick="flipMode()" class="nicebutton">Flip Mode</button>
+  <div style="height: 80px;"></div>
+  <div id="bottomel">
+    <div id="notes" class="chordinfo"></div>
+  </div>
+  <div style="height: 10px"></div>
+  <span style="color: #333; font-size:12px;">First inversion: 3rd in bass, Second inversion: 5th in bass</span>
 
   <script>
-    const majorKeys = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
-const inversions = ["Root Position", "First Inversion", "Second Inversion"];
+const majorKeys = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+const inversions = ["Root Position", "First Inversion", "Second Inversion"]; 
 
 function generateChord() {
   // Randomly pick a major key and inversion
@@ -39,12 +60,12 @@ function generateChord() {
   // Create the notes based on the selected key and inversion
   let notes = getChordNotes(key);
   for (let i = 0; i < inversionIndex; i++) {
-    notes.unshift(notes.pop());
+    notes.push(notes.shift());
   }
 
   // Update the UI with the chord and notes
   document.getElementById("chord").innerHTML = `${key} ${inversions[inversionIndex]}`;
-  document.getElementById("chord").innerHTML += `<br>Notes: ${notes.join(", ")}`;
+  document.getElementById("notes").innerHTML = `Notes: ${notes.join(", ")}`;
 }
 
 function getChordNotes(key) {
@@ -64,10 +85,22 @@ function getChordNotes(key) {
   }
 }
 
-
 // Generate the first chord on page load
 generateChord();
 
+function flipMode() {
+  // swap the divs for chord and notes
+  const chord = document.getElementById("chord");
+  const notes = document.getElementById("notes");
+  if (chord.parentElement.id === "topel") {
+    document.getElementById("topel").appendChild(notes);
+    document.getElementById("bottomel").appendChild(chord);
+  } else {
+    document.getElementById("topel").appendChild(chord);
+    document.getElementById("bottomel").appendChild(notes);
+  }
+  generateChord();
+}
 
   </script>
 </body>
